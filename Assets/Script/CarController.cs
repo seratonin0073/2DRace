@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
+
 
 public class CarController : MonoBehaviour
 {
     public WheelJoint2D frontWheel;//переднє колесо
     public WheelJoint2D backWheel;//заднє колесо
+    public TMP_Text gasText;//текст який відображає паливо
 
     private JointMotor2D motor;//об'єкт мотора
     private bool moveForward = false;//чи можна рухатись вперед
@@ -13,25 +17,27 @@ public class CarController : MonoBehaviour
     private float speed = 0f;//поточна швидкість мотору
     private bool onGrounded = true;//чи на землі машинка
     private Rigidbody2D rb2d;//об'єкт фізики
+    private int gas = 100;//поточна кількість палива
 
 
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();//передаємо посилання на об'єкт фізики
         motor.maxMotorTorque = 10000;//максимальна сила яка може бути прикладена до колеса
+        StartCoroutine(GasReducer());//викликаємо корутину GasReducer
     }
 
     void FixedUpdate()
     {
-        if(onGrounded)//якщо на землі
-        {
-            MoveOnGround();//керування на землі
-        }
-        else//інакше
+        MoveOnGround();//керування на землі
+        if (!onGrounded)//якщо не на землі
         {
             MoveInAir();//керування в повітрі
         }
-          
+
+        CheckGameOver();
+
+
     }
 
     void Update()
@@ -118,4 +124,52 @@ public class CarController : MonoBehaviour
             }
         }
     }
+
+    private void CheckGameOver()
+    {
+        Vector2 dir = transform.up;//задаэмо напрямок променя
+        //посилаємо промінь з певної точки в певному напрямку та на певну дистанцію
+        RaycastHit2D[] hit = Physics2D.RaycastAll(transform.position, dir, 0.7f);
+        //зображаємо промінь
+        Debug.DrawRay(transform.position, dir * 0.7f, Color.green);
+        //якщо об'єктів які перетнув більше ніж 1
+        if(hit.Length > 1)
+        {
+            GameOver();//закінчити гру
+        }
+    }
+    private void GameOver()//метод закінчення гри
+    {
+        SceneManager.LoadScene(0);//завантажуємо сцену під номером 0
+    }
+
+    //коли об'єкт торкається трігера іншого об'єкта
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //якщо об'єкт до якого ми торкнулись має тег DeadZone
+        if (collision.gameObject.CompareTag("DeadZone"))
+        {
+            GameOver();//кінець гри
+        }
+
+        //якщо торкаємось каністри палива
+        if (collision.gameObject.CompareTag("GasRefresher"))
+        {
+            gas = 100;//заливаємо бак на повну
+            Destroy(collision.gameObject);//знищуємо каністру
+        }
+    }
+
+    //створюємо корутину
+    private IEnumerator GasReducer()
+    {
+        while(gas > 0)//поки є паливо
+        {
+            gas--;//віднімаємо одиницю від палива
+            gasText.text = gas.ToString();//виводимо на екран
+            yield return new WaitForSeconds(0.5f);//чекаємо пів секунди
+        }
+        GameOver();//кінець гри
+    }
+
 }
