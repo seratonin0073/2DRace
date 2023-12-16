@@ -6,6 +6,8 @@ TagManager:
   tags:
   - DeadZone
   - GasRefresher
+  - Car
+  - Wheel
   layers:
   - Default
   - TransparentFX
