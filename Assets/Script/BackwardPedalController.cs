@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ForwardPedalController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class BackwardPedalController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public Sprite pedalUp;
     public Sprite pedalDown;
@@ -13,12 +13,12 @@ public class ForwardPedalController : MonoBehaviour, IPointerDownHandler, IPoint
     public void OnPointerDown(PointerEventData eventData)
     {
         GetComponent<Image>().sprite = pedalDown;
-        Car.GetComponent<CarController>().moveForward = true;
+        Car.GetComponent<CarController>().moveBackward = true;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         GetComponent<Image>().sprite = pedalUp;
-        Car.GetComponent<CarController>().moveForward = false;
+        Car.GetComponent<CarController>().moveBackward = false;
     }
 }

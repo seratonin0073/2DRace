@@ -11,9 +11,10 @@ public class CarController : MonoBehaviour
     public WheelJoint2D backWheel;//заднє колесо
     public TMP_Text gasText;//текст який відображає паливо
 
+    [HideInInspector] public bool moveForward = false;
+    [HideInInspector] public bool moveBackward = false;
+
     private JointMotor2D motor;//об'єкт мотора
-    private bool moveForward = false;//чи можна рухатись вперед
-    private bool moveBackward = false;//чи можна рухатись назад
     private float speed = 0f;//поточна швидкість мотору
     private bool onGrounded = true;//чи на землі машинка
     private Rigidbody2D rb2d;//об'єкт фізики
@@ -40,7 +41,7 @@ public class CarController : MonoBehaviour
 
     }
 
-    void Update()
+    /*void Update()
     {
         if(Input.GetKey(KeyCode.RightArrow))//якщо стрілка вправо натиснута
         {
@@ -68,7 +69,7 @@ public class CarController : MonoBehaviour
         {
             onGrounded = false;//ми не на землі
         }
-    }
+    }*/
 
     private void MoveOnGround()
     {
