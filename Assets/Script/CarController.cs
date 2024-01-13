@@ -160,14 +160,16 @@ public class CarController : MonoBehaviour
             Destroy(collision.gameObject);//знищуємо каністру
         }
 
+        //якщо торкнулися фінішу
         if (collision.gameObject.CompareTag("Finish"))
         {
-            int savedLevel = PlayerPrefs.GetInt("CurrentLevel");
-            int playedLevel = SceneManager.GetActiveScene().buildIndex;
-            if(playedLevel >= savedLevel)
+            int savedLevel = PlayerPrefs.GetInt("CurrentLevel");//запам'ятаємо збережену в пам'яті сцену
+            int playedLevel = SceneManager.GetActiveScene().buildIndex;//запам'ятовуємо номер поточної сцени
+            if(playedLevel >= savedLevel)//якщо номер поточної більше ніж номер збереженої
             {
-                PlayerPrefs.SetInt("CurrentLevel", playedLevel + 1);
+                PlayerPrefs.SetInt("CurrentLevel", playedLevel + 1);//зберігаємо нове значення збереженого рівня
             }
+            SceneManager.LoadScene("Menu");//завантажуємо меню
         }
     }
 
