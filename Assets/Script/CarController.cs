@@ -159,6 +159,16 @@ public class CarController : MonoBehaviour
             gas = 100;//заливаємо бак на повну
             Destroy(collision.gameObject);//знищуємо каністру
         }
+
+        if (collision.gameObject.CompareTag("Finish"))
+        {
+            int savedLevel = PlayerPrefs.GetInt("CurrentLevel");
+            int playedLevel = SceneManager.GetActiveScene().buildIndex;
+            if(playedLevel >= savedLevel)
+            {
+                PlayerPrefs.SetInt("CurrentLevel", playedLevel + 1);
+            }
+        }
     }
 
     //створюємо корутину
